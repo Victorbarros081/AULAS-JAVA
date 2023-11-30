@@ -1,53 +1,67 @@
-package ;
+package jogodaforca;
 
 import java.util.Scanner;
 
-public class JOGODAFORCA {
-
+public class atividadejogodaforca {
     public static void main(String[] args) {
-        String palavraChave = "carambola";
-        String letrasUsadas = "";
-        StringBuilder palavraAdivinhada = new StringBuilder("_".repeat(palavraChave.length()));
-        int tentativas_MAX = 8;
+        
+        String[] palavras = {"SPORT", "BARCELONA", "ARSENAL", "PALMEIRAS"};
+
+        
+        String palavraEscolhida = palavras[(int) (Math.random() * palavras.length)];
+        char[] letrasPalavra = palavraEscolhida.toCharArray();
+        char[] letrasDescobertas = new char[letrasPalavra.length];
+
+        
+        for (int i = 0; i < letrasDescobertas.length; i++) {
+            letrasDescobertas[i] = '_';
+        }
 
         Scanner scanner = new Scanner(System.in);
+        int tentativasRestantes = 6; 
 
-        System.out.println("Bem-vindo ao jogo da forca");
-        System.out.println("Sua tarefa é adivinhar a palavra escondida. Boa sorte!");
+        while (tentativasRestantes > 0) {
+           
+            System.out.print("Palavra: ");
+            for (char letra : letrasDescobertas) {
+                System.out.print(letra + " ");
+            }
+            System.out.println();
 
-        for (int tentativas = 0; tentativas < tentativas_MAX; tentativas++) {
-            System.out.printf("Rodada %d. Até agora adivinhada: %s. Qual a letra?%n", tentativas + 1, palavraAdivinhada);
+            
+            System.out.print("Digite uma letra: ");
+            char tentativa = scanner.next().toUpperCase().charAt(0);
 
-            char letraTentada;
-            do {
-                System.out.print("Digite uma letra: ");
-                letraTentada = scanner.next().toLowerCase().charAt(0);
-            } while (!Character.isLetter(letraTentada) || letrasUsadas.contains(String.valueOf(letraTentada)));
-
-            letrasUsadas += letraTentada;
-
-            if (palavraChave.indexOf(letraTentada) >= 0) {
-                for (int j = 0; j < palavraChave.length(); j++) {
-                    if (letrasUsadas.indexOf(palavraChave.charAt(j)) >= 0) {
-                        palavraAdivinhada.setCharAt(j, palavraChave.charAt(j));
-                    }
+           
+            boolean letraEncontrada = false;
+            for (int i = 0; i < letrasPalavra.length; i++) {
+                if (letrasPalavra[i] == tentativa) {
+                    letrasDescobertas[i] = tentativa;
+                    letraEncontrada = true;
                 }
+            }
 
-                if (!palavraAdivinhada.toString().contains("_")) {
-                    System.out.printf("Parabéns! A palavra adivinhada era '%s'%n", palavraAdivinhada);
-                    System.exit(0);
-                } else {
-                    System.out.printf("Muito bom ^_^ ! %c existe na palavra. Ainda tem letras escondidas%n", letraTentada);
-                }
-            } else {
-                System.out.printf("Infelizmente a letra %c não existe na palavra.%n ", letraTentada);
+            
+            if (!letraEncontrada) {
+                tentativasRestantes--;
+                System.out.println("Letra não encontrada. Tentativas restantes: " + tentativasRestantes);
+            }
+
+           
+            if (String.valueOf(letrasDescobertas).equals(palavraEscolhida)) {
+                System.out.println("Parabéns! Você acertou a palavra: " + palavraEscolhida);
+                break;
             }
         }
 
-        System.out.printf("Foram %d tentativas... x_x A palavra era '%s'%n", tentativas_MAX, palavraChave);
+        
+        if (tentativasRestantes == 0) {
+            System.out.println("Game over! A palavra era: " + palavraEscolhida);
+        }
 
         scanner.close();
     }
 }
+
 
 
